@@ -3,8 +3,9 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+PORT="${PORT:-3001}"
 
-echo "✨ Starting Autonomous Code Debugging Dashboard Frontend..."
+echo "✨ Starting Autonomous Code Debugging Dashboard on http://localhost:$PORT..."
 cd "$ROOT_DIR/frontend"
 
 if [ ! -d "node_modules" ]; then
@@ -12,4 +13,4 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-npm run dev
+npx next dev -p "$PORT"

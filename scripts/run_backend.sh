@@ -3,8 +3,9 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+PORT="${PORT:-8001}"
 
-echo "🚀 Starting Autonomous Code Debugging Agent Backend..."
+echo "🚀 Starting Autonomous Code Debugging Agent Backend on http://localhost:$PORT..."
 cd "$ROOT_DIR/backend"
 
 if [ ! -d "venv" ]; then
@@ -14,4 +15,4 @@ if [ ! -d "venv" ]; then
 fi
 
 export PYTHONPATH="$ROOT_DIR/backend"
-./venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+./venv/bin/uvicorn app.main:app --host 0.0.0.0 --port "$PORT" --reload

@@ -3,8 +3,21 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Project, DebugSession, AgentEvent, DiffData, DebugReport, TestFailure, AgentName } from "@/types";
 
-const API_BASE = "http://localhost:8000/api";
-const WS_BASE = "ws://localhost:8000/ws";
+const getApiBase = () => {
+  if (typeof window !== "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL || `${window.location.origin}/api`;
+  }
+  return "http://127.0.0.1:8001/api";
+};
+
+const getWsBase = () => {
+  if (typeof window !== "undefined") {
+    if (process.env.NEXT_PUBLIC_WS_URL) return process.env.NEXT_PUBLIC_WS_URL;
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${window.location.host}/ws`;
+  }
+  return "ws://127.0.0.1:8001/ws";
+};
 
 export function useDebugSession() {
   const [project, setProject] = useState<Project | null>(null);
@@ -57,7 +70,7 @@ export function useDebugSession() {
   // Load Built-in Demo Project
   const loadSampleProject = async () => {
     try {
-      const res = await fetch(`${API_BASE}/projects/sample`, { method: "POST" });
+      const res = await fetch(`${getApiBase()}/projects/sample`, { method: "POST" });
       if (!res.ok) throw new Error("Failed to load sample project");
       const data: Project = await res.json();
       setProject(data);
@@ -90,6 +103,37 @@ export function useDebugSession() {
     }
   };
 
+  // Upload Custom Project Archive (.zip)
+  const uploadProject = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", file.name.replace(/\.zip$/i, ""));
+      formData.append("file", file);
+      formData.append("description", `Uploaded repository archive: ${file.name}`);
+
+      const res = await fetch(`${getApiBase()}/projects/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || "Failed to upload project");
+      }
+      const data: Project = await res.json();
+      setProject(data);
+      setFailures([]);
+      setEvents([]);
+      setIterationRecords([]);
+      setReport(null);
+      setTestsAfter(undefined);
+      setValidationDecision(undefined);
+      setStatus("READY");
+    } catch (err) {
+      console.error(err);
+      alert("Error uploading project archive: " + err);
+    }
+  };
+
   // Start Autonomous Debugging
   const startDebugging = async () => {
     if (!project) return;
@@ -102,7 +146,7 @@ export function useDebugSession() {
       setTestsAfter(undefined);
       setValidationDecision(undefined);
 
-      const res = await fetch(`${API_BASE}/debug/${project.id}/start`, {
+      const res = await fetch(`${getApiBase()}/debug/${project.id}/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode, max_iterations: 5 })
@@ -126,7 +170,7 @@ export function useDebugSession() {
     if (wsRef.current) {
       wsRef.current.close();
     }
-    const ws = new WebSocket(`${WS_BASE}/debug/${sessionId}`);
+    const ws = new WebSocket(`${getWsBase()}/debug/${sessionId}`);
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
@@ -212,7 +256,7 @@ export function useDebugSession() {
 
   const fetchDiff = async (sessionId: string) => {
     try {
-      const res = await fetch(`${API_BASE}/debug/${sessionId}/diff`);
+      const res = await fetch(`${getApiBase()}/debug/${sessionId}/diff`);
       if (res.ok) {
         const d = await res.json();
         setDiffData(d);
@@ -222,7 +266,7 @@ export function useDebugSession() {
 
   const fetchReport = async (sessionId: string) => {
     try {
-      const res = await fetch(`${API_BASE}/debug/${sessionId}/report`);
+      const res = await fetch(`${getApiBase()}/debug/${sessionId}/report`);
       if (res.ok) {
         const r = await res.json();
         setReport(r);
@@ -236,7 +280,7 @@ export function useDebugSession() {
     if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     pollIntervalRef.current = setInterval(async () => {
       try {
-        const statusRes = await fetch(`${API_BASE}/debug/${sessionId}/status`);
+        const statusRes = await fetch(`${getApiBase()}/debug/${sessionId}/status`);
         if (statusRes.ok) {
           const s: DebugSession = await statusRes.json();
           setSession(s);
@@ -252,7 +296,7 @@ export function useDebugSession() {
           }
         }
 
-        const eventsRes = await fetch(`${API_BASE}/debug/${sessionId}/events`);
+        const eventsRes = await fetch(`${getApiBase()}/debug/${sessionId}/events`);
         if (eventsRes.ok) {
           const evs: AgentEvent[] = await eventsRes.json();
           evs.forEach((e) => handleAgentEvent(e));
@@ -264,7 +308,7 @@ export function useDebugSession() {
   const submitHumanDecision = async (action: "APPROVE" | "REJECT" | "CANCEL") => {
     if (!session) return;
     try {
-      await fetch(`${API_BASE}/debug/${session.id}/decide`, {
+      await fetch(`${getApiBase()}/debug/${session.id}/decide`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action })
@@ -328,6 +372,7 @@ export function useDebugSession() {
     isApprovalOpen,
     isRunning,
     loadSampleProject,
+    uploadProject,
     startDebugging,
     submitHumanDecision,
     resetAll
