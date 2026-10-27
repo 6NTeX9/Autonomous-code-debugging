@@ -18,22 +18,22 @@ interface IterationTimelineProps {
 
 export const IterationTimeline: React.FC<IterationTimelineProps> = ({ currentIteration, records }) => {
   return (
-    <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+    <div className="bg-[#111116] border border-[#22222d] rounded-xl p-5 shadow-lg shadow-black/30 space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[#22222d]">
         <div className="flex items-center space-x-2">
-          <History className="h-4 w-4 text-sky-400" />
+          <History className="h-4 w-4 text-emerald-400" />
           <h3 className="text-xs font-bold text-white uppercase tracking-wider">
             Autonomous Debugging Loop & Iteration Timeline
           </h3>
         </div>
-        <span className="text-xs font-mono text-slate-400">
+        <span className="text-xs font-mono text-zinc-400">
           Max Iterations: 5
         </span>
       </div>
 
       <div className="space-y-3">
         {records.length === 0 ? (
-          <div className="py-6 text-center text-slate-500 text-xs italic">
+          <div className="py-6 text-center text-zinc-500 text-xs italic">
             Iteration history will populate as the loop executes.
           </div>
         ) : (
@@ -43,27 +43,27 @@ export const IterationTimeline: React.FC<IterationTimelineProps> = ({ currentIte
             return (
               <div
                 key={i}
-                className="bg-slate-900 border border-slate-800 rounded-lg p-3 flex items-center justify-between text-xs"
+                className="bg-[#16161f] border border-[#232330] rounded-lg p-3 flex items-center justify-between text-xs"
               >
                 <div className="flex items-center space-x-3">
-                  <span className="font-bold text-white bg-slate-800 px-2.5 py-1 rounded font-mono">
+                  <span className="font-bold text-white bg-[#1c1c28] px-2.5 py-1 rounded font-mono border border-[#2b2b3b]">
                     Iteration {rec.iteration}
                   </span>
-                  <div className="flex items-center space-x-1.5 text-slate-400 text-[11px] font-mono">
+                  <div className="flex items-center space-x-1.5 text-zinc-400 text-[11px] font-mono">
                     <span>SCOUT</span>
                     <ArrowRight className="h-2.5 w-2.5" />
                     <span>DETECTIVE</span>
                     <ArrowRight className="h-2.5 w-2.5" />
                     <span>REPAIRER</span>
                     <ArrowRight className="h-2.5 w-2.5" />
-                    <span className="text-white font-bold">GUARDIAN</span>
+                    <span className="text-emerald-400 font-bold">GUARDIAN</span>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-3">
-                  <span className="font-mono text-slate-300">
-                    <span className="text-emerald-400">{rec.passed} P</span> /{" "}
-                    <span className="text-rose-400">{rec.failed} F</span>
+                  <span className="font-mono text-zinc-300">
+                    <span className="text-emerald-400 font-semibold">{rec.passed} P</span> /{" "}
+                    <span className="text-rose-400 font-semibold">{rec.failed} F</span>
                   </span>
                   {isSuccess ? (
                     <span className="flex items-center space-x-1 text-emerald-400 font-bold text-xs bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
@@ -71,7 +71,7 @@ export const IterationTimeline: React.FC<IterationTimelineProps> = ({ currentIte
                       <span>SUCCESS</span>
                     </span>
                   ) : isPartial ? (
-                    <span className="flex items-center space-x-1 text-sky-400 font-semibold text-xs bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">
+                    <span className="flex items-center space-x-1 text-amber-400 font-semibold text-xs bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
                       <RotateCcw className="h-3 w-3" />
                       <span>RETRY</span>
                     </span>

@@ -62,7 +62,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#070709] text-zinc-100 flex flex-col font-sans">
       {/* Navigation */}
       <Navbar
         mode={mode}
@@ -79,9 +79,9 @@ export default function Home() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
         {/* Project Header Bar */}
         {project ? (
-          <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-[#111116] border border-[#22222a] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg shadow-black/40">
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
+              <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                 <FolderGit2 className="h-5 w-5" />
               </div>
               <div>
@@ -89,32 +89,32 @@ export default function Home() {
                   <h2 className="text-sm font-bold text-white tracking-wide">
                     {project.name}
                   </h2>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1c1c24] text-zinc-300 border border-[#2e2e38]">
                     ID: {project.id.slice(0, 8)}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-0.5">{project.description}</p>
+                <p className="text-xs text-zinc-400 mt-0.5">{project.description}</p>
               </div>
             </div>
 
             {/* Badges */}
             <div className="flex items-center space-x-3 text-xs">
-              <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-                <FileCode2 className="h-3.5 w-3.5 text-blue-400" />
+              <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161d] border border-[#262632] text-zinc-300">
+                <FileCode2 className="h-3.5 w-3.5 text-emerald-400" />
                 <span>{project.language || "TypeScript"}</span>
               </div>
-              <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-                <Cpu className="h-3.5 w-3.5 text-purple-400" />
+              <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161d] border border-[#262632] text-zinc-300">
+                <Cpu className="h-3.5 w-3.5 text-violet-400" />
                 <span>{project.framework || "Express"}</span>
               </div>
-              <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-                <FlaskConical className="h-3.5 w-3.5 text-emerald-400" />
+              <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161d] border border-[#262632] text-zinc-300">
+                <FlaskConical className="h-3.5 w-3.5 text-amber-400" />
                 <span>{project.test_framework || "Jest"}</span>
               </div>
               {report && (
                 <button
                   onClick={() => setIsReportOpen(true)}
-                  className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold hover:bg-emerald-500/30 transition-colors"
+                  className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold hover:bg-emerald-500/30 transition-colors shadow-sm shadow-emerald-500/20"
                 >
                   <Award className="h-3.5 w-3.5 text-emerald-400" />
                   <span>View Final Report</span>
@@ -123,10 +123,12 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="bg-[#0f172a] border border-dashed border-slate-800 rounded-xl p-8 text-center space-y-4">
-            <Cpu className="h-8 w-8 text-sky-400 mx-auto opacity-70" />
-            <h2 className="text-sm font-bold text-white">No Repository Loaded</h2>
-            <p className="text-xs text-slate-400 max-w-md mx-auto">
+          <div className="bg-[#111116] border border-dashed border-[#272734] rounded-xl p-8 text-center space-y-4 shadow-xl">
+            <div className="h-12 w-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
+              <Cpu className="h-6 w-6" />
+            </div>
+            <h2 className="text-sm font-bold text-white tracking-wide">No Repository Loaded</h2>
+            <p className="text-xs text-zinc-400 max-w-md mx-auto">
               Load our built-in 21-test E-commerce service with 3 realistic defects, or upload any custom Python or TypeScript/Node project (.zip) to debug autonomously.
             </p>
             <input
@@ -139,16 +141,16 @@ export default function Home() {
             <div className="flex items-center justify-center space-x-3 pt-1">
               <button
                 onClick={loadSampleProject}
-                className="px-4 py-2 rounded-lg text-xs font-bold bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-500/20 transition-all inline-flex items-center space-x-2"
+                className="px-4 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/20 transition-all inline-flex items-center space-x-2 cursor-pointer"
               >
                 <Cpu className="h-4 w-4" />
                 <span>Load Demo Project Now</span>
               </button>
               <button
                 onClick={() => emptyFileInputRef.current?.click()}
-                className="px-4 py-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-300 hover:text-emerald-200 shadow-md transition-all inline-flex items-center space-x-2"
+                className="px-4 py-2 rounded-lg text-xs font-bold bg-[#181822] hover:bg-[#222230] border border-violet-500/40 text-violet-300 hover:text-violet-200 shadow-md transition-all inline-flex items-center space-x-2 cursor-pointer"
               >
-                <Upload className="h-4 w-4 text-emerald-400" />
+                <Upload className="h-4 w-4 text-violet-400" />
                 <span>Upload Custom Project (.zip)</span>
               </button>
             </div>

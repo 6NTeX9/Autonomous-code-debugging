@@ -17,7 +17,7 @@ const AGENTS = [
     role: "Repository & Error Analysis",
     member: "Member 1",
     icon: Search,
-    color: "sky",
+    color: "emerald",
     description: "Inspects codebase, runs baseline tests, isolates failing modules"
   },
   {
@@ -26,7 +26,7 @@ const AGENTS = [
     role: "Root Cause & Reasoning",
     member: "Member 2",
     icon: Brain,
-    color: "purple",
+    color: "violet",
     description: "Traces call sites, generates hypotheses, isolates defect root cause"
   },
   {
@@ -44,7 +44,7 @@ const AGENTS = [
     role: "Validation & Testing",
     member: "Member 4",
     icon: ShieldCheck,
-    color: "emerald",
+    color: "teal",
     description: "Re-runs tests, checks regressions, verifies fix or triggers rollback"
   }
 ];
@@ -63,19 +63,19 @@ export const AgentPipeline: React.FC<AgentPipelineProps> = ({ currentAgent, stat
   const activeIndex = getAgentIndex(currentAgent);
 
   return (
-    <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-5 shadow-sm">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+    <div className="bg-[#111116] border border-[#22222d] rounded-xl p-5 shadow-lg shadow-black/30">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#22222d]">
         <div className="flex items-center space-x-2">
-          <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
+          <span className="text-xs uppercase font-bold tracking-wider text-zinc-400">
             Primary Agentic AI Pipeline
           </span>
-          <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
+          <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#1c1c26] text-zinc-300 font-mono border border-[#2c2c3a]">
             Iteration {iteration} / 5
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-xs text-slate-400 font-medium">State:</span>
-          <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase">
+          <span className="text-xs text-zinc-400 font-medium">State:</span>
+          <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 uppercase">
             {status}
           </span>
         </div>
@@ -92,19 +92,19 @@ export const AgentPipeline: React.FC<AgentPipelineProps> = ({ currentAgent, stat
               key={agent.id}
               className={`relative rounded-xl p-4 border transition-all duration-300 ${
                 isActive
-                  ? "bg-slate-800/90 border-sky-400 ring-2 ring-sky-500/30 shadow-lg shadow-sky-500/10"
+                  ? "bg-[#181824] border-emerald-400 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-500/15"
                   : isCompleted
-                  ? "bg-slate-900/80 border-emerald-500/40 opacity-90"
-                  : "bg-slate-900/40 border-slate-800 opacity-60"
+                  ? "bg-[#14141c] border-emerald-500/40 opacity-90"
+                  : "bg-[#111116] border-[#22222d] opacity-60"
               }`}
             >
               {/* Header Badge */}
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
                   {agent.member}
                 </span>
                 {isActive ? (
-                  <span className="flex items-center space-x-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500 text-white animate-pulse">
+                  <span className="flex items-center space-x-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500 text-white animate-pulse">
                     <Loader2 className="h-2.5 w-2.5 animate-spin" />
                     <span>Active</span>
                   </span>
@@ -114,7 +114,7 @@ export const AgentPipeline: React.FC<AgentPipelineProps> = ({ currentAgent, stat
                     <span>Done</span>
                   </span>
                 ) : (
-                  <span className="text-[10px] text-slate-500">Standby</span>
+                  <span className="text-[10px] text-zinc-500">Standby</span>
                 )}
               </div>
 
@@ -123,22 +123,22 @@ export const AgentPipeline: React.FC<AgentPipelineProps> = ({ currentAgent, stat
                 <div
                   className={`p-2 rounded-lg ${
                     isActive
-                      ? "bg-sky-500/20 text-sky-400"
-                      : isCompleted
                       ? "bg-emerald-500/20 text-emerald-400"
-                      : "bg-slate-800 text-slate-400"
+                      : isCompleted
+                      ? "bg-emerald-500/15 text-emerald-400"
+                      : "bg-[#1c1c26] text-zinc-400"
                   }`}
                 >
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white tracking-tight">{agent.name}</h3>
-                  <p className="text-[11px] text-slate-300 font-medium">{agent.role}</p>
+                  <p className="text-[11px] text-zinc-300 font-medium">{agent.role}</p>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-xs text-slate-400 leading-relaxed mt-1">
+              <p className="text-xs text-zinc-400 leading-relaxed mt-1">
                 {agent.description}
               </p>
             </div>

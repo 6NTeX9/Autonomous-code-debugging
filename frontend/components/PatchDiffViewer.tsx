@@ -13,8 +13,8 @@ export const PatchDiffViewer: React.FC<PatchDiffViewerProps> = ({ diffData, chec
   const diffLines = (diffData?.diff || "").split("\n");
 
   return (
-    <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+    <div className="bg-[#111116] border border-[#22222d] rounded-xl p-5 shadow-lg shadow-black/30 space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[#22222d]">
         <div className="flex items-center space-x-2">
           <FileDiff className="h-4 w-4 text-amber-400" />
           <h3 className="text-xs font-bold text-white uppercase tracking-wider">
@@ -22,8 +22,8 @@ export const PatchDiffViewer: React.FC<PatchDiffViewerProps> = ({ diffData, chec
           </h3>
         </div>
         {checkpoint && (
-          <div className="flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-mono">
-            <GitBranch className="h-3 w-3 text-sky-400" />
+          <div className="flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#1c1c28] border border-[#2c2c3d] text-zinc-300 text-xs font-mono">
+            <GitBranch className="h-3 w-3 text-emerald-400" />
             <span>{checkpoint}</span>
           </div>
         )}
@@ -31,14 +31,14 @@ export const PatchDiffViewer: React.FC<PatchDiffViewerProps> = ({ diffData, chec
 
       {/* Summary and modified files header */}
       {diffData?.summary && (
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs space-y-2">
-          <div className="flex items-center space-x-2 text-slate-300 font-medium">
+        <div className="bg-[#16161f] border border-[#232330] rounded-lg p-3 text-xs space-y-2">
+          <div className="flex items-center space-x-2 text-zinc-300 font-medium">
             <GitCommit className="h-3.5 w-3.5 text-amber-400" />
             <span>Patch Summary: {diffData.summary}</span>
           </div>
           {diffData.modified_files.length > 0 && (
             <div className="flex flex-wrap gap-1.5 pt-1">
-              <span className="text-[11px] text-slate-500 mr-1 self-center">Modified:</span>
+              <span className="text-[11px] text-zinc-500 mr-1 self-center">Modified:</span>
               {diffData.modified_files.map((file, i) => (
                 <span
                   key={i}
@@ -54,7 +54,7 @@ export const PatchDiffViewer: React.FC<PatchDiffViewerProps> = ({ diffData, chec
 
       {/* Diff Viewer */}
       {diffLines.length > 0 && diffData?.diff ? (
-        <div className="bg-black/60 border border-slate-800 rounded-lg p-3 font-mono text-[12px] max-h-72 overflow-y-auto overflow-x-auto leading-relaxed">
+        <div className="bg-black/80 border border-[#232330] rounded-lg p-3 font-mono text-[12px] max-h-72 overflow-y-auto overflow-x-auto leading-relaxed shadow-inner">
           {diffLines.map((line, idx) => {
             let lineClass = "text-slate-400";
             let bgClass = "bg-transparent";

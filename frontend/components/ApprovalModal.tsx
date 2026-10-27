@@ -26,8 +26,8 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="bg-[#0f172a] border border-amber-500/40 rounded-2xl max-w-xl w-full flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4 border-b border-slate-800 bg-amber-500/10 flex items-center space-x-3">
+      <div className="bg-[#111116] border border-amber-500/40 rounded-2xl max-w-xl w-full flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-6 py-4 border-b border-[#22222d] bg-amber-500/10 flex items-center space-x-3">
           <ShieldAlert className="h-5 w-5 text-amber-400" />
           <div>
             <h3 className="text-sm font-bold text-white tracking-wide uppercase">
@@ -41,23 +41,23 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
         <div className="p-6 space-y-4 text-xs">
           <div>
-            <span className="text-[11px] uppercase font-bold text-slate-400">Diagnosis</span>
-            <p className="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-slate-200 mt-1">
+            <span className="text-[11px] uppercase font-bold text-zinc-400">Diagnosis</span>
+            <p className="bg-[#16161f] border border-[#232330] p-2.5 rounded-lg text-zinc-200 mt-1">
               {rootCause || "Defect identified in inspected files."}
             </p>
           </div>
 
           <div>
-            <span className="text-[11px] uppercase font-bold text-slate-400">Proposed Fix & Strategy</span>
-            <p className="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-emerald-300 font-mono mt-1">
+            <span className="text-[11px] uppercase font-bold text-zinc-400">Proposed Fix & Strategy</span>
+            <p className="bg-[#16161f] border border-[#232330] p-2.5 rounded-lg text-emerald-300 font-mono mt-1">
               {proposedFix || "Apply defensive null check and correct formula."}
             </p>
           </div>
 
           {diff && (
             <div>
-              <span className="text-[11px] uppercase font-bold text-slate-400">Patch Diff Preview</span>
-              <div className="bg-black/60 border border-slate-800 p-2.5 rounded-lg font-mono text-[11px] max-h-36 overflow-y-auto text-slate-300 mt-1 whitespace-pre">
+              <span className="text-[11px] uppercase font-bold text-zinc-400">Patch Diff Preview</span>
+              <div className="bg-black/60 border border-[#232330] p-2.5 rounded-lg font-mono text-[11px] max-h-36 overflow-y-auto text-zinc-300 mt-1 whitespace-pre">
                 {diff}
               </div>
             </div>

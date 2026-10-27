@@ -29,8 +29,8 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
         );
       case "PARTIALLY_VERIFIED":
         return (
-          <span className="flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">
-            <CheckCircle2 className="h-3.5 w-3.5 text-sky-400" />
+          <span className="flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
             <span>PARTIALLY VERIFIED</span>
           </span>
         );
@@ -43,7 +43,7 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
         );
       default:
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
+          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-[#1c1c28] text-zinc-400 border border-[#2b2b3b]">
             Awaiting Validation
           </span>
         );
@@ -54,8 +54,8 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   const afterPassedPct = testsAfter ? Math.round((testsAfter.passed / (testsAfter.total || 1)) * 100) : beforePassedPct;
 
   return (
-    <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+    <div className="bg-[#111116] border border-[#22222d] rounded-xl p-5 shadow-lg shadow-black/30 space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[#22222d]">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="h-4 w-4 text-emerald-400" />
           <h3 className="text-xs font-bold text-white uppercase tracking-wider">
@@ -68,17 +68,17 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
       {/* Comparison Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Before Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-3.5 space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-400">
+        <div className="bg-[#16161f] border border-[#232330] rounded-lg p-3.5 space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
             <span className="font-semibold uppercase tracking-wider">Tests Baseline (Before)</span>
-            <span className="font-mono text-slate-300">{testsBefore.total} Total</span>
+            <span className="font-mono text-zinc-300">{testsBefore.total} Total</span>
           </div>
           <div className="flex items-center space-x-4 text-xs font-mono">
             <span className="text-emerald-400 font-semibold">{testsBefore.passed} Passed</span>
             <span className="text-rose-400 font-semibold">{testsBefore.failed} Failed</span>
           </div>
           {/* Progress bar */}
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-[#1c1c28] h-1.5 rounded-full overflow-hidden">
             <div
               className="bg-emerald-500 h-full rounded-full"
               style={{ width: `${beforePassedPct}%` }}
@@ -87,10 +87,10 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
         </div>
 
         {/* After Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-3.5 space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-400">
+        <div className="bg-[#16161f] border border-[#232330] rounded-lg p-3.5 space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
             <span className="font-semibold uppercase tracking-wider">Tests Post-Repair (After)</span>
-            <span className="font-mono text-slate-300">
+            <span className="font-mono text-zinc-300">
               {testsAfter ? `${testsAfter.total} Total` : "Pending"}
             </span>
           </div>
@@ -100,13 +100,13 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
               <span className="text-rose-400 font-semibold">{testsAfter.failed} Failed</span>
             </div>
           ) : (
-            <div className="text-xs text-slate-500 italic">Validation run pending patch application...</div>
+            <div className="text-xs text-zinc-500 italic">Validation run pending patch application...</div>
           )}
           {/* Progress bar */}
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-[#1c1c28] h-1.5 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
-                testsAfter?.failed === 0 ? "bg-emerald-400" : "bg-sky-400"
+                testsAfter?.failed === 0 ? "bg-emerald-400" : "bg-amber-400"
               }`}
               style={{ width: `${afterPassedPct}%` }}
             />
@@ -115,10 +115,10 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
       </div>
 
       {/* Regression & Decision Note */}
-      <div className="flex items-center justify-between bg-slate-900/60 border border-slate-800 rounded-lg p-3 text-xs">
+      <div className="flex items-center justify-between bg-[#16161f]/60 border border-[#232330] rounded-lg p-3 text-xs">
         <div className="flex items-center space-x-2">
           <AlertOctagon className={`h-4 w-4 ${regressions > 0 ? "text-rose-400" : "text-emerald-400"}`} />
-          <span className="text-slate-300">
+          <span className="text-zinc-300">
             Regressions Detected: <strong className={regressions > 0 ? "text-rose-400" : "text-emerald-400"}>{regressions}</strong>
           </span>
         </div>
