@@ -163,6 +163,39 @@ export default function Home() {
                 <span>Upload Custom Project (.zip)</span>
               </button>
             </div>
+
+            {/* Downloadable Test Archives for Live Demonstration */}
+            <div className="pt-4 border-t border-[#1e1e28] max-w-xl mx-auto">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-2.5">
+                Download Sample Buggy Repositories (.zip) to Test Upload:
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <a
+                  href="/demos/1-ecommerce-order-service.zip"
+                  download
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161f] hover:bg-[#1f1f2e] border border-[#2a2a38] text-[11px] text-zinc-300 hover:text-emerald-300 transition-colors"
+                >
+                  <Download className="h-3 w-3 text-emerald-400" />
+                  <span>1. E-Commerce Order Service (.zip)</span>
+                </a>
+                <a
+                  href="/demos/2-subscription-billing-service.zip"
+                  download
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161f] hover:bg-[#1f1f2e] border border-[#2a2a38] text-[11px] text-zinc-300 hover:text-violet-300 transition-colors"
+                >
+                  <Download className="h-3 w-3 text-violet-400" />
+                  <span>2. Subscription Billing Engine (.zip)</span>
+                </a>
+                <a
+                  href="/demos/3-inventory-warehouse-service.zip"
+                  download
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161f] hover:bg-[#1f1f2e] border border-[#2a2a38] text-[11px] text-zinc-300 hover:text-amber-300 transition-colors"
+                >
+                  <Download className="h-3 w-3 text-amber-400" />
+                  <span>3. Warehouse Inventory Service (.zip)</span>
+                </a>
+              </div>
+            </div>
           </div>
         )}
 

@@ -87,6 +87,78 @@ class MockProvider(LLMProvider):
         # AGENT 3: REPAIRER
         # -------------------------------------------------------------
         if "agent 3: repairer" in sys or "agent 3" in sys or "repairer" in sys:
+            if "inventory" in pr or "deductstock" in pr or "reorderthreshold" in pr:
+                fixed_inv_service = """export interface InventoryItem {
+  sku: string;
+  name: string;
+  quantity: number;
+  reorderThreshold: number;
+  unitCost: number;
+}
+
+export class InventoryService {
+  private stock: Map<string, InventoryItem> = new Map();
+
+  constructor() {
+    this.stock.set("SKU-101", {
+      sku: "SKU-101",
+      name: "Wireless Mechanical Keyboard",
+      quantity: 25,
+      reorderThreshold: 10,
+      unitCost: 40,
+    });
+    this.stock.set("SKU-202", {
+      sku: "SKU-202",
+      name: "USB-C Docking Station",
+      quantity: 10,
+      reorderThreshold: 10,
+      unitCost: 80,
+    });
+  }
+
+  public getItem(sku: string): InventoryItem | undefined {
+    return this.stock.get(sku);
+  }
+
+  public deductStock(sku: string, quantity: number): number {
+    const item = this.getItem(sku);
+    if (!item) {
+      throw new Error("Item not found");
+    }
+    if (quantity > item.quantity) {
+      throw new Error("Insufficient stock available");
+    }
+    item.quantity -= quantity;
+    return item.quantity;
+  }
+
+  public needsReorder(sku: string): boolean {
+    const item = this.getItem(sku);
+    if (!item) return false;
+    return item.quantity <= item.reorderThreshold;
+  }
+
+  public calculateRestockCost(unitCost: number, quantity: number): number {
+    if (unitCost <= 0 || quantity <= 0) return 0;
+    const rawTotal = unitCost * quantity;
+    if (quantity >= 100) {
+      return Number((rawTotal * 0.85).toFixed(2));
+    }
+    return Number(rawTotal.toFixed(2));
+  }
+}
+"""
+                patch_data = {
+                    "patch_id": "patch_inventory_service_all_defects",
+                    "modified_files": ["src/services/inventoryService.ts"],
+                    "patch_summary": "Added insufficient stock validation guard in deductStock(), updated reorder boundary condition to <= reorderThreshold, and applied 15% bulk supplier discount for restock orders >= 100 units.",
+                    "diff": "--- a/src/services/inventoryService.ts\n+++ b/src/services/inventoryService.ts\n@@ -41,2 +41,5 @@\n+    if (quantity > item.quantity) {\n+      throw new Error(\"Insufficient stock available\");\n+    }\n     item.quantity -= quantity;\n@@ -53,2 +56,2 @@\n-    return item.quantity < item.reorderThreshold;\n+    return item.quantity <= item.reorderThreshold;\n@@ -63,2 +66,5 @@\n     const rawTotal = unitCost * quantity;\n+    if (quantity >= 100) {\n+      return Number((rawTotal * 0.85).toFixed(2));\n+    }\n     return Number(rawTotal.toFixed(2));",
+                    "file_contents": {
+                        "src/services/inventoryService.ts": fixed_inv_service
+                    }
+                }
+                return json.dumps(patch_data)
+
             if "subscription" in pr or "renewsubscription" in pr:
                 fixed_sub_service = """export interface Plan {
   id: string;
@@ -341,6 +413,37 @@ export class OrderService {
         # AGENT 2: DETECTIVE
         # -------------------------------------------------------------
         if "agent 2: detective" in sys or "detective" in sys:
+            if "inventory" in pr or "deductstock" in pr or "reorderthreshold" in pr:
+                data = {
+                    "hypotheses": [
+                        {
+                            "description": "inventoryService.ts deductStock() allows deducting more than available stock without throwing error, needsReorder() uses strict < instead of <=, and calculateRestockCost() omits the 15% bulk supplier discount.",
+                            "evidence": [
+                                "Failing test `should throw Insufficient stock available error when deducting more than available stock` did not throw",
+                                "Failing test `should trigger reorder alert when stock quantity equals reorderThreshold boundary` Expected: true, Received: false",
+                                "Failing test `should apply 15% bulk supplier discount when restocking 100 or more units` Expected: 1700, Received: 2000"
+                            ],
+                            "affected_files": ["src/services/inventoryService.ts"],
+                            "confidence": 0.97
+                        }
+                    ],
+                    "root_cause": "inventoryService.ts lacks quantity guard before stock deduction, uses strict inequality `<` instead of `<=` for reorder threshold comparison, and fails to apply the 15% bulk supplier discount for orders >= 100 units.",
+                    "evidence": [
+                        "deductStock() subtracts quantity directly without verifying quantity <= item.quantity",
+                        "needsReorder() evaluates item.quantity < item.reorderThreshold instead of <=",
+                        "calculateRestockCost() returns rawTotal without 0.85 multiplier when quantity >= 100"
+                    ],
+                    "affected_files": ["src/services/inventoryService.ts"],
+                    "confidence": 0.97,
+                    "repair_strategy": "Add check `if (quantity > item.quantity) throw new Error('Insufficient stock available')` in deductStock(), change `<` to `<=` in needsReorder(), and multiply rawTotal by 0.85 when quantity >= 100 in calculateRestockCost().",
+                    "constraints": [
+                        "Preserve InventoryItem interface and existing SKUs",
+                        "Do not modify inventory.test.ts assertions"
+                    ],
+                    "reasoning_summary": "Inspected inventoryService.ts against failing unit tests. Identified missing negative-stock guard, boundary off-by-one in reorder check, and missing bulk discount tier. Confidence: 97%."
+                }
+                return json.dumps(data)
+
             if "subscription" in pr or "renewsubscription" in pr:
                 data = {
                     "hypotheses": [
