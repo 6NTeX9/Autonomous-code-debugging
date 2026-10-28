@@ -62,6 +62,30 @@ def get_project(project_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Project not found")
     return project
 
+@router.get("/projects/{project_id}/download")
+def download_repaired_project(project_id: str, db: Session = Depends(get_db)):
+    from fastapi.responses import FileResponse
+    import zipfile
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project or not Path(project.workspace_path).exists():
+        raise HTTPException(status_code=404, detail="Project workspace not found")
+
+    ws_path = Path(project.workspace_path)
+    zip_path = ws_path.parent / f"{project.name}-repaired.zip"
+
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for file in ws_path.rglob("*"):
+            if any(part in file.parts for part in ["node_modules", ".git", "__pycache__", ".venv", ".next"]):
+                continue
+            if file.is_file() and file != zip_path:
+                zipf.write(file, file.relative_to(ws_path))
+
+    return FileResponse(
+        path=str(zip_path),
+        filename=f"{project.name}-repaired.zip",
+        media_type="application/zip"
+    )
+
 # --- Debug Session Endpoints ---
 
 @router.post("/debug/{project_id}/start", response_model=SessionResponse)

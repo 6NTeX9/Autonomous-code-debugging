@@ -30,6 +30,14 @@ class ProjectService:
         safe_extract_zip(temp_zip, workspace_path)
         temp_zip.unlink(missing_ok=True)
 
+        # If uploaded project has package.json, link sample project's node_modules so npm test works immediately
+        source_modules = settings.SAMPLE_PROJECT_DIR / "node_modules"
+        if (workspace_path / "package.json").exists() and source_modules.exists() and not (workspace_path / "node_modules").exists():
+            try:
+                (workspace_path / "node_modules").symlink_to(source_modules.resolve(), target_is_directory=True)
+            except Exception:
+                pass
+
         project = Project(
             id=project_id,
             name=name,

@@ -12,7 +12,7 @@ import { IterationTimeline } from "@/components/IterationTimeline";
 import { ReportModal } from "@/components/ReportModal";
 import { ApprovalModal } from "@/components/ApprovalModal";
 import { useDebugSession } from "@/hooks/useDebugSession";
-import { FolderGit2, Cpu, FileCode2, FlaskConical, Award, Upload } from "lucide-react";
+import { FolderGit2, Cpu, FileCode2, FlaskConical, Award, Upload, Download } from "lucide-react";
 
 export default function Home() {
   const {
@@ -111,6 +111,15 @@ export default function Home() {
                 <FlaskConical className="h-3.5 w-3.5 text-amber-400" />
                 <span>{project.test_framework || "Jest"}</span>
               </div>
+              <a
+                href={`/api/projects/${project.id}/download`}
+                download
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#16161d] hover:bg-[#20202a] border border-emerald-500/30 text-emerald-300 hover:text-emerald-200 text-xs font-semibold transition-all shadow-sm shadow-emerald-500/10 cursor-pointer"
+                title="Download the repaired project workspace (.zip) with all agent patches applied"
+              >
+                <Download className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Download Repaired Code (.zip)</span>
+              </a>
               {report && (
                 <button
                   onClick={() => setIsReportOpen(true)}

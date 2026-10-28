@@ -74,7 +74,10 @@ class ScoutAgent:
 
         # Extract symbols and search source files for matching symbols
         for fail in test_summary.failures:
-            for candidate in ["getUser", "calculateDiscount", "calculateShipping", "userController", "discountService", "orderService"]:
+            for candidate in [
+                "getUser", "calculateDiscount", "calculateShipping", "userController", "discountService", "orderService",
+                "renewSubscription", "calculateAnnualSavings", "isAccountActive", "subscriptionService"
+            ]:
                 if candidate.lower() in fail.test.lower() or candidate.lower() in fail.error.lower():
                     sym_label = candidate + "()" if not candidate.endswith("Service") and not candidate.endswith("Controller") else candidate
                     if sym_label not in relevant_symbols:

@@ -87,6 +87,94 @@ class MockProvider(LLMProvider):
         # AGENT 3: REPAIRER
         # -------------------------------------------------------------
         if "agent 3: repairer" in sys or "agent 3" in sys or "repairer" in sys:
+            if "subscription" in pr or "renewsubscription" in pr:
+                fixed_sub_service = """export interface Plan {
+  id: string;
+  name: string;
+  price: number; // monthly in USD
+}
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  planId: string;
+  status: "ACTIVE" | "PAST_DUE" | "CANCELED";
+  daysOverdue: number;
+}
+
+export class SubscriptionService {
+  private plans: Record<string, Plan> = {
+    BASIC: { id: "BASIC", name: "Basic Plan", price: 10 },
+    PRO: { id: "PRO", name: "Pro Plan", price: 25 },
+    ENTERPRISE: { id: "ENTERPRISE", name: "Enterprise Plan", price: 100 },
+  };
+
+  private subscriptions: Map<string, Subscription> = new Map();
+
+  constructor() {
+    this.subscriptions.set("sub_001", {
+      id: "sub_001",
+      userId: "usr_100",
+      planId: "PRO",
+      status: "ACTIVE",
+      daysOverdue: 0,
+    });
+    this.subscriptions.set("sub_002", {
+      id: "sub_002",
+      userId: "usr_101",
+      planId: "BASIC",
+      status: "PAST_DUE",
+      daysOverdue: 3,
+    });
+  }
+
+  public getPlan(planId: string): Plan | undefined {
+    return this.plans[planId];
+  }
+
+  public getSubscription(subId: string): Subscription | undefined {
+    return this.subscriptions.get(subId);
+  }
+
+  public renewSubscription(subId: string): { success: boolean; renewedAmount: number } {
+    const sub = this.getSubscription(subId);
+    if (!sub) {
+      throw new Error("Subscription not found");
+    }
+    const plan = this.getPlan(sub.planId);
+    return {
+      success: true,
+      renewedAmount: plan ? plan.price : 0,
+    };
+  }
+
+  public calculateAnnualSavings(monthlyPrice: number): number {
+    if (monthlyPrice <= 0) return 0;
+    return Number((monthlyPrice * 2).toFixed(2));
+  }
+
+  public isAccountActive(subId: string): boolean {
+    const sub = this.getSubscription(subId);
+    if (!sub) return false;
+    if (sub.status === "ACTIVE") return true;
+    if (sub.status === "PAST_DUE") {
+      return sub.daysOverdue <= 7;
+    }
+    return false;
+  }
+}
+"""
+                patch_data = {
+                    "patch_id": "patch_subscription_service_all_defects",
+                    "modified_files": ["src/services/subscriptionService.ts"],
+                    "patch_summary": "Added defensive missing-subscription check throwing 'Subscription not found', corrected annual savings calculation multiplier to 2, and fixed past-due grace period logic to daysOverdue <= 7.",
+                    "diff": "--- a/src/services/subscriptionService.ts\n+++ b/src/services/subscriptionService.ts\n@@ -54,3 +54,6 @@\n     const sub = this.getSubscription(subId);\n+    if (!sub) {\n+      throw new Error(\"Subscription not found\");\n+    }\n     const plan = this.getPlan(sub.planId);\n@@ -66,2 +69,2 @@\n-    return Number((monthlyPrice * 1).toFixed(2));\n+    return Number((monthlyPrice * 2).toFixed(2));\n@@ -76,2 +79,2 @@\n-      return sub.daysOverdue > 7;\n+      return sub.daysOverdue <= 7;",
+                    "file_contents": {
+                        "src/services/subscriptionService.ts": fixed_sub_service
+                    }
+                }
+                return json.dumps(patch_data)
+
             if focus_bug == 1:
                 fixed_user_controller = """import { Request, Response } from "express";
 import { UserRepository } from "../repositories/userRepository";
@@ -253,6 +341,38 @@ export class OrderService {
         # AGENT 2: DETECTIVE
         # -------------------------------------------------------------
         if "agent 2: detective" in sys or "detective" in sys:
+            if "subscription" in pr or "renewsubscription" in pr:
+                data = {
+                    "hypotheses": [
+                        {
+                            "description": "subscriptionService.ts renewSubscription() accesses sub.planId when sub is undefined, calculateAnnualSavings multiplies by 1 instead of 2, and isAccountActive checks daysOverdue > 7 instead of <= 7.",
+                            "evidence": [
+                                "Jest stack trace points to subscriptionService.ts line 56: TypeError: Cannot read properties of undefined (reading 'planId')",
+                                "Failing test `should calculate 2 months annual savings for monthly price of $50` Expected: 100, Received: 50",
+                                "Failing test `should grant active access during 7-day past-due grace period` Expected: true, Received: false"
+                            ],
+                            "affected_files": ["src/services/subscriptionService.ts"],
+                            "confidence": 0.96
+                        }
+                    ],
+                    "root_cause": "subscriptionService.ts lacks null validation for non-existent subscription IDs in renewSubscription(), computes annual savings with an incorrect multiplier, and inverts the grace period condition for past-due subscriptions.",
+                    "evidence": [
+                        "renewSubscription() does not check if getSubscription() returns undefined",
+                        "calculateAnnualSavings returns monthlyPrice * 1 instead of monthlyPrice * 2",
+                        "isAccountActive uses > 7 instead of <= 7 for grace period check"
+                    ],
+                    "affected_files": ["src/services/subscriptionService.ts"],
+                    "confidence": 0.96,
+                    "repair_strategy": "Add defensive check `if (!sub) throw new Error('Subscription not found')` in renewSubscription(), multiply by 2 in calculateAnnualSavings(), and check `sub.daysOverdue <= 7` in isAccountActive().",
+                    "constraints": [
+                        "Preserve public API signatures of SubscriptionService",
+                        "Do not alter Plan or Subscription interfaces",
+                        "Do not disable any assertions in subscription.test.ts"
+                    ],
+                    "reasoning_summary": "Inspected subscriptionService.ts and failing assertions. Identified missing null guard on renewSubscription, off-by-one/incorrect multiplier in calculateAnnualSavings, and inverted inequality for grace-period accounts. Confidence: 96%."
+                }
+                return json.dumps(data)
+
             if focus_bug == 1:
                 data = {
                     "hypotheses": [
